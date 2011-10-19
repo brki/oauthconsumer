@@ -57,7 +57,11 @@
 																  data:responseData
 															didSucceed:NO];
 
-	[delegate performSelector:didFailSelector withObject:ticket withObject:error];
+    if (usesBlocks) {
+        didFinishBlock(NO, ticket, responseData, error);
+    } else {
+        [delegate performSelector:didFailSelector withObject:ticket withObject:error];
+    }
 	[ticket release];
 }
 
@@ -71,7 +75,11 @@
 																  data:responseData
 															didSucceed:[(NSHTTPURLResponse *)response statusCode] < 400];
 
-	[delegate performSelector:didFinishSelector withObject:ticket withObject:responseData];
+    if (usesBlocks) {
+        didFinishBlock(YES, ticket, responseData, NULL);
+    } else {
+        [delegate performSelector:didFinishSelector withObject:ticket withObject:responseData];
+    }
 	[ticket release];
 }
 
@@ -81,9 +89,22 @@
     delegate = aDelegate;
     didFinishSelector = finishSelector;
     didFailSelector = failSelector;
+    usesBlocks = NO;
     
     [request prepare];
 
+	connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self];
+}
+
+- (void)fetchDataWithRequest:(OAMutableURLRequest *)aRequest didFinishBlock:(didFinishBlock_t)finishBlock
+{
+	[request release];
+	request = [aRequest retain];
+    usesBlocks = YES;
+    didFinishBlock = finishBlock;
+    [didFinishBlock retain];
+    [request prepare];
+    
 	connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self];
 }
 

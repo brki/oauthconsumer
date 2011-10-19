@@ -27,6 +27,7 @@
 #import "OAMutableURLRequest.h"
 #import "OAServiceTicket.h"
 
+typedef void (^didFinishBlock_t)(BOOL success, OAServiceTicket *ticket, NSMutableData *responseData, NSError *error);
 
 @interface OADataFetcher : NSObject {
 @private
@@ -35,10 +36,13 @@
     NSURLConnection *connection;
     NSMutableData *responseData;
     id delegate;
+    BOOL usesBlocks;
     SEL didFinishSelector;
     SEL didFailSelector;
+    didFinishBlock_t didFinishBlock;
 }
 
 - (void)fetchDataWithRequest:(OAMutableURLRequest *)aRequest delegate:(id)aDelegate didFinishSelector:(SEL)finishSelector didFailSelector:(SEL)failSelector;
+- (void)fetchDataWithRequest:(OAMutableURLRequest *)aRequest didFinishBlock:(didFinishBlock_t)finishBlock;
 
 @end
