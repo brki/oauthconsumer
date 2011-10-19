@@ -77,6 +77,7 @@
 
     if (usesBlocks) {
         didFinishBlock(YES, ticket, responseData, NULL);
+        [didFinishBlock release];
     } else {
         [delegate performSelector:didFinishSelector withObject:ticket withObject:responseData];
     }
