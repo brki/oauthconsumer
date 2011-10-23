@@ -102,8 +102,7 @@
 	[request release];
 	request = [aRequest retain];
     usesBlocks = YES;
-    didFinishBlock = finishBlock;
-    [didFinishBlock retain];
+    didFinishBlock = [finishBlock copy];
     [request prepare];
     
 	connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self];
