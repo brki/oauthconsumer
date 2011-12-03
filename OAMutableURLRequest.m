@@ -31,6 +31,7 @@
 - (void)_generateTimestamp;
 - (void)_generateNonce;
 - (NSString *)_signatureBaseString;
+NSInteger normalize(id obj1, id obj2, void *context);
 @end
 
 @implementation OAMutableURLRequest
